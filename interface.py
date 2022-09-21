@@ -15,3 +15,23 @@ class WeChatpay(Payment):
 
 p=WeChatpay()
 p.pay(100)
+
+
+class LandAnimal(metaclass=ABCMeta):
+    @abstractmethod
+    def walk(self):
+        pass
+    
+class WaterAnimal(metaclass=ABCMeta):
+    @abstractmethod
+    def swim(self):
+        pass
+
+class SkyAnimal(metaclass=ABCMeta):
+    @abstractmethod
+    def fly(self):
+        pass
+
+class Tiger(LandAnimal):
+    def walk(self):
+        print("老虎走路")
