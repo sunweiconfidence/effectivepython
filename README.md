@@ -1,0 +1,2 @@
+# effectivepython
+effective python demo
