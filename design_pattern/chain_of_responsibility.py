@@ -1,44 +1,36 @@
 from abc import ABCMeta, abstractmethod
-
-class Subject(metaclass=ABCMeta):
+class Handler(metaclass=ABCMeta):
     @abstractmethod
-    def get_content(self):
+    def handle_leave(self, day):
         pass
     
-    @abstractmethod
-    def set_content(self, content):
-        pass
-    
-class RealSubject(Subject):
-    def __init__(self, filename):
-        self.filename = filename
-        f = open(filename, 'r')
-        self.content = f.read()
-        f.close()
-    
-    def get_content(self):
-        return self.content
-    
-    def set_content(self, content):
-        f = open(self.filename, 'w')
-        f.write(content)
-        f.close()
+class GeneralManager(Handler):
+    def handle_leave(self, day):
+        if day <= 10:
+            print("总经理准假%d天" %day)
+        else:
+            print("你还是辞职吧")
 
-class VirtualProxy(Subject):
-    def __init__(self, filename):
-        self.filename = filename
-        self.subj = None
-    
-    def get_content(self):
-        if not self.subj:
-            self.subj = RealSubject(self.filename)
-        return self.subj.get_content()
-    
-    def set_content(self, content):
-        if not self.subj:
-            self.subj = RealSubject(self.filename)
-        return self.subj.set_content(content)
+class DepartmentManager(Handler):
+    def __init__(self):
+        self.next = GeneralManager()
         
+    def handle_leave(self, day):
+        if day <= 5:
+            print("部门经理准假%d天" %day)
 
-subj = VirtualProxy("test.txt")
-print(subj.get_content())
+class ProjectDirector(Handler):
+    def __init__(self):
+        self.next = DepartmentManager()
+    
+    def handle_leave(self, day):
+        if day <= 1:
+            print("项目主管准假%d天" %day)
+        else:
+            print("项目主管职权不足")
+            self.next.handle_leave(day)
+
+# Client
+day = 4
+h = ProjectDirector()
+h.handle_leave(day)
